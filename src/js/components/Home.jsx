@@ -54,13 +54,17 @@ const Home = () => {
 		setTasks(updatedList)
 	}
 
-	const deleteTask = (index) => {
-		let updatedList = tasks.filter((task, i) => {
-			if (i !== index) {
-				return {label: task.label, is_done: task.is_done}
-			}
+	const deleteTask = async (id) => {
+		let deleteResponse = await fetch("https://playground.4geeks.com/todo/todos/" + id, {
+			method: "DELETE"
 		})
-		setTasks(updatedList)
+		getUserData()
+		// let updatedList = tasks.filter((task, i) => {
+			// if (i !== index) {
+				// return {label: task.label, is_done: task.is_done}
+			// }
+		// })
+		// setTasks(updatedList)
 	}
 
 	return (
@@ -102,7 +106,7 @@ const Home = () => {
 							htmlFor="checkDefault">
     						{task.label}
   						</label>
-						<span onClick = {() => deleteTask(index)}>
+						<span onClick = {() => deleteTask(task.id)}>
 							&#x2612;
 						</span>
 					</div>
