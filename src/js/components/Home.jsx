@@ -44,14 +44,17 @@ const Home = () => {
 			setUserInput("")
 		};
 
-	const markAsDone = (index) => {
-		let updatedList = tasks.map((task, i) => {
-			if (i == index) {
-				return {label: task.label, is_done: !task.is_done}
-			}
-			else return task;
+	const markAsDone = async (task) => {
+		let putResponse = await fetch("https://playground.4geeks.com/todo/todos/" + task.id, {
+    		method: "PUT",
+    		headers: { "Content-type": "application/json" },
+    		body: JSON.stringify({ 
+        	label: task.label,
+        	is_done: !task.is_done
+    		})
 		})
-		setTasks(updatedList)
+		let putData = await putResponse.json()
+		getUserData();
 	}
 
 	const deleteTask = async (id) => {
@@ -59,12 +62,16 @@ const Home = () => {
 			method: "DELETE"
 		})
 		getUserData()
-		// let updatedList = tasks.filter((task, i) => {
-			// if (i !== index) {
-				// return {label: task.label, is_done: task.is_done}
-			// }
-		// })
-		// setTasks(updatedList)
+	}
+
+	// One strategy to delete all responses - delete the user and recreate the user
+	const deleteAll = async () => {
+		let deleteAllResponses = await fetch("https://playground.4geeks.com/todo/todos/pmandries", {
+    		method: "PUT",
+			headers: { "content-type" : "application/json" },
+			body: JSON.stringify({})
+    		})
+		getUserData()
 	}
 
 	return (
@@ -96,8 +103,9 @@ const Home = () => {
 							value="" 
 							id="checkDefault" 
 							onChange = {
-								() => markAsDone(index)
+								() => markAsDone(task)
 							}
+							checked = {task.is_done}
 						/>
   						<label 
 							className = {
@@ -114,7 +122,7 @@ const Home = () => {
 				}
 			</div>
 			<div className = "text-center">
-				<button className = "mt-5">Delete All</button>
+				<button className = "mt-5" onClick = {() => deleteAll()}>Delete All</button>
 			</div>
 		</div>
 	);
