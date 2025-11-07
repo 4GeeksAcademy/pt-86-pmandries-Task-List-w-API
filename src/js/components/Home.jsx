@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom/client";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
 	
 	const [tasks, setTasks] = useState([]);
@@ -12,7 +8,7 @@ const Home = () => {
 
 	useEffect(() => {
 		getUserData()
-	}, []); // This should only run once w/ empty array
+	}, []);
 
 	async function getUserData () {
 		let response = await fetch("https://playground.4geeks.com/todo/users/pmandries");
@@ -41,7 +37,7 @@ const Home = () => {
 		});
 		let data = await response.json()
 			getUserData();
-			setUserInput("")
+			setUserInput("");
 		};
 
 	const markAsDone = async (task) => {
@@ -61,17 +57,16 @@ const Home = () => {
 		let deleteResponse = await fetch("https://playground.4geeks.com/todo/todos/" + id, {
 			method: "DELETE"
 		})
-		getUserData()
+		getUserData();
 	}
 
-	// One strategy to delete all responses - delete the user and recreate the user
 	const deleteAll = async () => {
-		let deleteAllResponses = await fetch("https://playground.4geeks.com/todo/todos/pmandries", {
-    		method: "PUT",
-			headers: { "content-type" : "application/json" },
-			body: JSON.stringify({})
+		let deleteAllResponses = await fetch("https://playground.4geeks.com/todo/users/pmandries", {
+    		method: "DELETE",
+			headers: { "accept": "application/json" }
     		})
-		getUserData()
+		createUser();
+		getUserData();
 	}
 
 	return (
